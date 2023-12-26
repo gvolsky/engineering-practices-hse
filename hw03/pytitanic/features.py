@@ -4,12 +4,9 @@ import pandas as pd
 
 
 def categorize(odir, trname, tsname):
-    """Impute missing values."""
-
     train = pd.read_csv(trname, index_col="PassengerId")
     test = pd.read_csv(tsname, index_col="PassengerId")
     df = pd.concat([train, test], sort=False)
-
     df["CabinId"] = df["Cabin"].str.get(0)
     df["CabinId"] = df["CabinId"].astype("category").cat.codes
     df["EmbarkedId"] = df["Embarked"].astype("category").cat.codes
@@ -17,7 +14,6 @@ def categorize(odir, trname, tsname):
 
     cols = ["Survived", "Pclass", "Sex", "Age", "SibSp", "Parch",
             "Fare", "CabinId", "EmbarkedId"]
-
     odir = pathlib.Path(odir)
     df.loc[train.index, cols].to_csv(odir.joinpath("train_features.csv"))
     df.loc[test.index, cols[1:]].to_csv(odir.joinpath("test_features.csv"))
